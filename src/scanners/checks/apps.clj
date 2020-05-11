@@ -2,7 +2,7 @@
   (:require [clojure.string :as str]
             [clojure.io     :as io]))
 
-(defn- check
+(defn check
   "Returns check"
-  [config]
+  [repo config]
   {})

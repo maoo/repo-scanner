@@ -18,7 +18,7 @@
   (:require [clojure.string          :as str]
             [clojure.tools.cli       :as cli]
             [clojure.tools.logging   :as log]
-            [scanner.tools.exit-code :as ec]
+            [scanner.tools.cli-utils :as cu]
             [scanner.core            :as c])
   (:gen-class))
 
@@ -40,28 +40,14 @@
     ""
     (str "Available tools:\n\t" (str/join "\n\t" c/tool-names))]))
 
-(defn- error-message
-  [errors]
-  (str "The following errors occurred while parsing your command:\n\n"
-       (str/join \newline errors)))
-
-(defn- exit
-  ([exit-code] (exit exit-code nil))
-  ([exit-code message]
-   (ec/set-exit-code exit-code)
-   (when-not (str/blank? message)
-     (println message))
-   (flush)
-   (System/exit (ec/get-exit-code))))
-
 (defn -main
   [& args]
   (log/info "repo-scanner started")
   (try
     (let [{:keys [options errors summary]} (cli/parse-opts args cli-opts)]
       (cond
-        (:help options) (exit 0 (usage summary))
-        errors          (exit 1 (error-message errors)))
+        (:help options) (cu/exit 0 (usage summary))
+        errors          (cu/exit 1 (cu/error-message errors)))
       (c/run-tool options))
     (catch Exception e
       (log/error "repo-scanner finished unsuccessfully" e)

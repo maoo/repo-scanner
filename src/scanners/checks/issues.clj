@@ -3,7 +3,7 @@
             [clojure.io     :as io]
             [tentacles.issues :as ti]))
 
-(defn- check
+(defn check
   "Returns check"
-  [config]
+  [repo config]
   {})

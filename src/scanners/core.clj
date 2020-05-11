@@ -15,23 +15,35 @@
 ; limitations under the License.
 ;
 (ns scanner.core
-  (:require [clojure.string :as str]
-            [clojure.io     :as io]
-            [clj-yaml.core  :as yaml]))
+  (:require [clojure.string          :as str]
+            [clojure.java.io         :as io]
+            [clj-jgit.porcelain      :as jgit]
+            [scanner.tools.cli-utils :as cu]
+            [clj-yaml.core           :as yaml]))
+
+(def ^:private no-config-error "Couldn't find a config file. Make sure it's either passed with --config or .github/repo-scanner.yml is present in your repo")
 
 (defn- run-scanner
   "Runs the given scanner"
-  [config]
+  [repo-dir config]
   (let [cmd    (str (:fn config) "/check")
         cmd-fn (resolve (symbol (str/lower-case cmd)))]
-    (cmd-fn config)))
+    (cmd-fn repo-dir config)))
 
 (defn run-scanners
   "Runs the repo-scanner tool."
-  [options]
-  ; TODO - checkout GitHub repo via --repo param (see main.clj)
-  ; TODO - read YAML config file from repo
-  (let [yaml (:config options)
-        file (io/resource yaml)
-        config (yaml/parse-string file)]
-    (map #(run-scanner %) config)))
+  [repo-coords options]
+  (let [base-dir (System/getProperty "java.io.tmpdir")
+        repo-url (str "https://github.com/" repo-coords ".git")
+        repo-dir (str base-dir repo-coords)
+        repo-yml (str repo-dir ".github/repo-scanner.yml")
+        cfg-yml  (:config options)]
+    ; clone the repo
+    (jgit/git-clone repo-url :dir repo-dir)
+    ; load config from config first, then from the repo, else fail
+    (let [yaml-file (cond
+                      (.exists (io/as-file cfg-yml)) (io/resource cfg-yml)
+                      (.exists (io/as-file repo-yml)) (io/resource repo-yml)
+                      :else    (cu/exit 1 (cu/error-message [no-config-error])))
+          config (yaml/parse-string yaml-file)]
+      (map #(run-scanner (io/file repo-dir) %) config))))

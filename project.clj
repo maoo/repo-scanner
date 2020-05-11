@@ -21,9 +21,8 @@
   :license              {:name "Apache License, Version 2.0"
                          :url  "http://www.apache.org/licenses/LICENSE-2.0"}
   :min-lein-version     "2.7.1"
-  :repositories         [["sonatype-snapshots" {
-                                                :url "https://oss.sonatype.org/content/groups/public" :snapshots true}]
-                         ["jitpack"            {:url "https://jitpack.io"                             
+  :repositories         [["sonatype-snapshots" {:url "https://oss.sonatype.org/content/groups/public" :snapshots true}]
+                         ["jitpack"            {:url "https://jitpack.io"
                                                 :snapshots true}]]
   :plugins              [[lein-licenses "0.2.2"]
                          [lein-ancient "0.6.15"]]
@@ -36,7 +35,8 @@
                          [org.slf4j/jul-to-slf4j                "1.7.30"]
                          [clj-commons/clj-yaml                  "0.7.0"]
                          [lambdaisland/uri                      "1.1.0"]
-                         [irresponsible/tentacles               "0.6.6"]]
+                         [irresponsible/tentacles               "0.6.6"]
+                         [clj-jgit                              "1.0.0-beta3"]]
   :managed-dependencies [[joda-time/joda-time "2.10.5"]
                          [clj-http            "3.10.0"]]
   :profiles             {:dev     {:dependencies [[midje      "1.9.9"]]

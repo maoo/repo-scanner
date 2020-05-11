@@ -15,9 +15,15 @@
 ; limitations under the License.
 ;
 
-(ns scanner.exit-code)
+(ns scanner.tools.cli-utils
+  (:require [clojure.string          :as str]))
 
 (def ^:private exit-code (atom 0))
+
+(defn error-message
+  [errors]
+  (str "The following errors occurred while parsing your command:\n\n"
+       (str/join \newline errors)))
 
 (defn set-exit-code
   "Sets the exit code to at least the given value."
@@ -40,3 +46,11 @@
   []
   @exit-code)
 
+(defn exit
+  ([exit-code] (exit exit-code nil))
+  ([exit-code message]
+   (set-exit-code exit-code)
+   (when-not (str/blank? message)
+     (println message))
+   (flush)
+   (System/exit (get-exit-code))))

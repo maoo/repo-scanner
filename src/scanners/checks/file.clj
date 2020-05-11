@@ -2,14 +2,15 @@
   (:require [clojure.string :as str]
             [clojure.io     :as io]))
 
-(def msg-includes "Cannot find string '%s' on file '%s'")
+(def ^:private msg-includes "Cannot find string '%s' on file '%s'")
 
-(def msg-excludes "String '%s' found on file '%s'")
+(def ^:private msg-excludes "String '%s' found on file '%s'")
 
-(defn- check
+(defn check
   "Returns check"
-  [config]
-  (let [path         (:file config)
+  [repo config]
+  (let [rel-path     (:file config)
+        path         (io/file repo rel-path)
         exists       (io/exists? path)
         content      (io/resource path)
         not-includes (map #(not (str/includes? content %)) (:includes config))
