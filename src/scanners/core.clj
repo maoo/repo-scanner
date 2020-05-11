@@ -29,6 +29,8 @@
 (defn run-scanners
   "Runs the repo-scanner tool."
   [options]
+  ; TODO - checkout GitHub repo via --repo param (see main.clj)
+  ; TODO - read YAML config file from repo
   (let [yaml (:config options)
         file (io/resource yaml)
         config (yaml/parse-string file)]
