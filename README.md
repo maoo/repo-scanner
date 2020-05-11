@@ -23,10 +23,11 @@ For now, the Repo Scanner should be run via Leiningen:
 $ lein run -- -h
 Runs a scanner
 
-Usage: repo-scanner <command> [-o org -r repo1,repo2,repo3]
+Usage: repo-scanner <command> [-r user/repo -c FILE]
 
 Options:
   -r, --repo user/repo      GitHub repo coordinates
+  -c, --config FILE         Repo scanner configuration
   -h, --help
 
 Available tools:
@@ -50,7 +51,7 @@ Available tools:
 
 ## License
 
-Copyright 2017 Fintech Open Source Foundation
+Copyright 2020 Fintech Open Source Foundation
 
 Distributed under the [Apache License, Version 2.0](http://www.apache.org/licenses/LICENSE-2.0).
 
