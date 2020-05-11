@@ -1,0 +1,20 @@
+name: Repo Scanner
+author: Maurizio Pillitu <maoo@finos.org>
+description: Runs validations against a GitHub Repository
+branding:
+  icon: 'message-square'  
+  color: 'blue'
+inputs:
+  repo:
+    description: GitHub repository
+    required: true
+  config:
+    description: Scanner config
+    required: true
+
+runs:
+  using: 'docker'
+  image: 'Dockerfile'
+  args:
+    - ${{ inputs.repo }}
+    - ${{ inputs.config }}

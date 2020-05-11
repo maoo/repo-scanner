@@ -1,0 +1,26 @@
+name: build-github-org-meta
+
+on:
+  push:
+    paths:
+      - 'project.clj'
+      - 'src/**'
+      - 'resources/**'
+      - 'workflows/build.yml'
+  pull_request:
+    paths:
+      - 'project.clj'
+      - 'src/**'
+      - 'resources/**'
+      - 'workflows/build.yml'
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+    - name: Checkout metadata
+      uses: actions/checkout@v2
+    - name: Lein check
+      run: lein check
+    - name: Lein deps
+      run: lein deps

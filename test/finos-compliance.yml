@@ -1,0 +1,75 @@
+- name: Check NOTICE file
+  fn: scanner.checks.file
+  file: NOTICE
+  includes:
+    - This product includes software developed at the Fintech Open Source Foundation
+  excludes:
+    - "{project name}"
+    - "{yyyy}"
+    - "{current_year}"
+    - "{name of copyright owner}"
+    - "{email of copyright owner}"
+
+- name: Check README file
+  fn: scanner.checks.file
+  file: README.md
+  includes:
+    - "# contributing"
+    - "# license"
+  excludes:
+    - "{project name}"
+    - "{yyyy}"
+    - "{current_year}"
+    - "{name of copyright owner}"
+    - "{email of copyright owner}"
+  regexp:
+    - "(?s).*/finos/contrib-toolbox(.*)master/images/badge-incubating.svg\)(?s).*"
+
+- name: Check ISSUE_TEMPLATE file
+  fn: scanner.checks.file
+  file: ".github/ISSUE_TEMPLATE"
+  excludes:
+    - "{project name}"
+    - "{yyyy}"
+    - "{current_year}"
+    - "{name of copyright owner}"
+    - "{email of copyright owner}"
+
+- name: Check CONTRIBUTING file
+  fn: scanner.checks.file
+  file: ".github/CONTRIBUTING.md"
+  excludes:
+    - "{project name}"
+    - "{yyyy}"
+    - "{current_year}"
+    - "{name of copyright owner}"
+    - "{email of copyright owner}"
+
+- name: Check CODE_OF_CONDUCT file
+  fn: scanner.checks.file
+  file: ".github/CODE_OF_CONDUCT.md"
+  excludes:
+    - "{project name}"
+    - "{yyyy}"
+    - "{current_year}"
+    - "{name of copyright owner}"
+    - "{email of copyright owner}"
+
+- name: Check WhiteSource integration
+  fn: scanner.checks.file
+  file: ".whitesource"
+
+- name: No security vulnerabilities
+  fn: scanner.checks.issues
+  label: "security vulnerability"
+  max: 0
+
+- name: FINOS Apps
+  fn: scanner.checks.apps
+  apps:
+    - probot-settings
+
+- name: FINOS GitHub Actions
+  fn: scanner.checks.actions
+  apps:
+    - docusaurus

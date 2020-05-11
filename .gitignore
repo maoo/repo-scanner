@@ -1,0 +1,34 @@
+# Maven build
+pom.xml
+pom.xml.asc
+*jar
+lib/
+/classes/
+/targets/
+/target/
+
+# Leiningen and REPL
+.lein-deps-sum
+.lein-repl-history
+.lein-failures
+.nrepl-port
+.shell_history
+
+# IDE settings
+.idea
+*.iml
+.classpath
+.project
+.settings
+.vscode
+
+# Execution files
+*.log
+finos-meetings.csv
+email-report.html
+finos-repo-validation.json
+github-finos-meetings-add.csv
+github-finos-meetings-remove.csv
+github-finos-meetings.csv
+landscape.yml
+meeting-attendance.json
