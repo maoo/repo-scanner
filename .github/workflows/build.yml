@@ -1,4 +1,4 @@
-name: build-github-org-meta
+name: build
 
 on:
   push:

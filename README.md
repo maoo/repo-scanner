@@ -29,9 +29,6 @@ Options:
   -r, --repo user/repo      GitHub repo coordinates
   -c, --config FILE         Repo scanner configuration
   -h, --help
-
-Available tools:
-<list of currently available tools is displayed here - this list will change as new tools are developed>
 ```
 
 ## Developer Information
