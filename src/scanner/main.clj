@@ -31,14 +31,9 @@
   [options-summary]
   (str/join
    \newline
-   ["Repo Scanner."
-    ""
-    "Usage: repo-scanner [options] command"
-    ""
-    "Options:"
-    options-summary
-    ""
-    (str "Available tools:\n\t" (str/join "\n\t" c/tool-names))]))
+   ["Repo Scanner." ""
+    "Usage: repo-scanner [options] command" ""
+    "Options:" options-summary]))
 
 (defn -main
   [& args]
@@ -48,9 +43,9 @@
       (cond
         (:help options) (cu/exit 0 (usage summary))
         errors          (cu/exit 1 (cu/error-message errors)))
-      (c/run-tool options))
+      (c/run-scanners options))
     (catch Exception e
       (log/error "repo-scanner finished unsuccessfully" e)
-      (exit 2)))
+      (cu/exit 2)))
   (log/info "repo-scanner finished successfully")
-  (exit 0))
+  (cu/exit 0))

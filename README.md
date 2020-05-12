@@ -1,6 +1,8 @@
 # GitHub Repo Scanner
 
-A GitHub Action to scan a GitHub repository.
+A GitHub Action to scan a GitHub repository against a list of scanners configured via YAML file; additional scanners can be easily written (in Clojure) and added in the configuration.
+
+Repo scanner can also run as standalone CLI, by providing `--repo` and `--config` command options, as shown below.
 
 ## Usage
 
@@ -10,7 +12,7 @@ The Repo Scanner uses Leiningen to run:
 $ lein run -- -h
 Runs a scanner
 
-Usage: repo-scanner <command> [-r user/repo -c FILE]
+Usage: repo-scanner [-r user/repo -c FILE]
 
 Options:
   -r, --repo user/repo      GitHub repo coordinates
@@ -20,7 +22,7 @@ Options:
 
 ## Configuration
 
-Configuration is provided via YAML file, which must be passed as `--config` parameter to the scanner execution. A sample is provided in `test/finos-complianc.yml`:
+Configuration is provided via YAML file, which must can be either passed as `--config` parameter or resolved in `.github/repo-scanner.yml` repo location. A sample is provided in `test/finos-compliance.yml`:
 
 ```
 - name: Check NOTICE file
@@ -104,7 +106,7 @@ Configuration is provided via YAML file, which must be passed as `--config` para
 
 The `GITHUB_TOKEN` environment variable must be set.
 
-If `GITHUB_EVENT_PATH` is provided, repository coordinates are extracted from it.
+If `GITHUB_EVENT_PATH` is provided, the GitHub Action will extract repository coordinates from the [event JSON payload](https://developer.github.com/v3/activity/events/types/).
 
 ### Logging Configuration
 
