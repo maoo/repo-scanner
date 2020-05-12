@@ -24,3 +24,5 @@ jobs:
       run: lein check
     - name: Lein deps
       run: lein deps
+    - name: Lein test
+      run: lein test
