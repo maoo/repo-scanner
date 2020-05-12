@@ -22,8 +22,8 @@
     - "{current_year}"
     - "{name of copyright owner}"
     - "{email of copyright owner}"
-  regexp:
-    - "(?s).*/finos/contrib-toolbox(.*)master/images/badge-incubating.svg\)(?s).*"
+  # regexp:
+  #   - "(?s).*/finos/contrib-toolbox(.*)master/images/badge-incubating.svg\)(?s).*"
 
 - name: Check ISSUE_TEMPLATE file
   fn: scanner.checks.file

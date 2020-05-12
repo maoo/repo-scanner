@@ -23,6 +23,8 @@
 
 (def ^:private no-config-error "Couldn't find a config file. Make sure it's either passed with --config or .github/repo-scanner.yml is present in your repo")
 
+(def ^:private no-repo-error "Repository coordinates not specified. Make sure it's either passed with --repo or via the $GITHUB_EVENT_PATH environment variable")
+
 (defn- run-scanner
   "Runs the given scanner"
   [repo-dir config]
@@ -33,20 +35,21 @@
 (defn run-scanners
   "Runs the repo-scanner tool."
   [options]
-  (let [repo     (:repo options)
-        base-dir (System/getProperty "java.io.tmpdir")
-        repo-url (str "https://github.com/" repo ".git")
-        repo-dir (str base-dir repo)
-        repo-yml (str repo-dir ".github/repo-scanner.yml")
-        cfg-yml  (:config options)]
-    (println repo-url)
-    (println repo-dir)
-    ; clone the repo
-    (jgit/git-clone repo-url :dir repo-dir)
-    ; load config from config first, then from the repo, else fail
-    (let [yaml-file (cond
-                      (.exists (io/as-file cfg-yml)) (io/resource cfg-yml)
-                      (.exists (io/as-file repo-yml)) (io/resource repo-yml)
-                      :else    (cu/exit 1 (cu/error-message [no-config-error])))
-          config (yaml/parse-string yaml-file)]
-      (map #(run-scanner (io/file repo-dir) %) config))))
+  (if-let [repo (:repo options)]
+    (let [base-dir  (System/getProperty "java.io.tmpdir")
+          repo-url  (str "https://github.com/" repo ".git")
+          timestamp (quot (System/currentTimeMillis) 1000)
+          repo-dir  (str base-dir repo "-" timestamp)
+          repo-yml  (str repo-dir ".github/repo-scanner.yml")
+          cfg-yml   (:config options)]
+      ; clone the repo
+      (jgit/git-clone repo-url :dir repo-dir)
+      ; load YAML file from CLI options first, then from the repo, else fail
+      (let [yaml-file (cond
+                        (.exists (io/as-file cfg-yml))  (io/file cfg-yml)
+                        (.exists (io/as-file repo-yml)) (io/file repo-yml)
+                        :else                           (cu/exit 1 (cu/error-message 
+                                                                    [no-config-error])))
+            config (yaml/parse-string (slurp yaml-file))]
+        (map #(run-scanner (io/file repo-dir) %) config)))
+    (cu/exit 1 (cu/error-message [no-repo-error]))))
