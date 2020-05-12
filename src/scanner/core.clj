@@ -17,9 +17,14 @@
 (ns scanner.core
   (:require [clojure.string          :as str]
             [clojure.java.io         :as io]
+            [clojure.pprint          :as pp]
             [clj-jgit.porcelain      :as jgit]
             [scanner.tools.cli-utils :as cu]
-            [clj-yaml.core           :as yaml]))
+            [clj-yaml.core           :as yaml]
+            [scanner.checks.file]
+            [scanner.checks.issues]
+            [scanner.checks.apps]
+            [scanner.checks.actions]))
 
 (def ^:private no-config-error "Couldn't find a config file. Make sure it's either passed with --config or .github/repo-scanner.yml is present in your repo")
 
@@ -28,6 +33,9 @@
 (defn- run-scanner
   "Runs the given scanner"
   [repo-dir config]
+  (println "Running scanner on" repo-dir "with config")
+  (pp/pprint config)
+  
   (let [cmd    (str (:fn config) "/check")
         cmd-fn (resolve (symbol (str/lower-case cmd)))]
     (cmd-fn repo-dir config)))
@@ -51,5 +59,6 @@
                         :else                           (cu/exit 1 (cu/error-message 
                                                                     [no-config-error])))
             config (yaml/parse-string (slurp yaml-file))]
-        (map #(run-scanner (io/file repo-dir) %) config)))
+        ; TODO - add renderers
+        (pp/pprint (map #(run-scanner repo-dir %) config))))
     (cu/exit 1 (cu/error-message [no-repo-error]))))

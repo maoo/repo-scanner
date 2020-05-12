@@ -1,22 +1,23 @@
 (ns scanner.checks.file
-  (:require [clojure.string :as str]
-            [clojure.io     :as io]))
+  (:require [clojure.string  :as str]
+            [clojure.java.io :as io]))
 
-(def ^:private msg-includes "Cannot find string '%s' on file '%s'")
+(def ^:private msg-includes "Cannot find string '%s'")
 
-(def ^:private msg-excludes "String '%s' found on file '%s'")
+(def ^:private msg-excludes "String '%s' found")
 
 (defn check
   "Returns check"
   [repo config]
   (let [rel-path     (:file config)
         path         (io/file repo rel-path)
-        exists       (io/exists? path)
-        content      (io/resource path)
-        not-includes (map #(not (str/includes? content %)) (:includes config))
-        excludes     (map #(str/includes? content %) (:excludes config))
-        incl-msg     (map #(str/format msg-includes % path) not-includes)
-        excl-msg     (map #(str/format msg-excludes % path) excludes)]
-    {:exists     exists
-     :includes incl-msg
-     :excludes excl-msg}))
+        exists       (.exists (io/as-file path))
+        content      (io/file path)
+        not-includes (remove #(str/includes? content %) (:includes config))
+        excludes     (filter #(str/includes? content %) (:excludes config))
+        incl-msg     (map #(format msg-includes % rel-path) not-includes)
+        excl-msg     (map #(format msg-excludes % rel-path) excludes)
+        ret          {:file rel-path :exists exists}
+        ret-incl     (if (empty? incl-msg) ret (assoc ret :includes incl-msg))
+        ret-excl     (if (empty? excl-msg) ret-incl (assoc ret-incl :excludes excl-msg))]
+    ret-excl))

@@ -13,4 +13,4 @@
     ; (is (= nil (-main ["-p" "whatever"])))
     ; (is (= nil (-main "run" "-c" "config.yml" "-r" "maoo/repo-scanner"))))
   (testing "Valid args"
-    (is (= nil (-main "-c" "./test/finos-compliance.yml" "-r" "maoo/repo-scanner")))))
+    (is (= nil (-main "-c" "test/finos-compliance.yml" "-r" "maoo/repo-scanner")))))
