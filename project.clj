@@ -27,6 +27,7 @@
   :plugins              [[lein-licenses "0.2.2"]
                          [lein-ancient "0.6.15"]]
   :dependencies         [[org.clojure/clojure                   "1.10.1"]
+                         [mount                                 "0.1.15"]
                          [org.clojure/tools.cli                 "0.4.2"]
                          [org.clojure/tools.logging             "0.5.0"]
                          [ch.qos.logback/logback-classic        "1.2.3"]
